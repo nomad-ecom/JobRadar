@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+*.db
+.env
+.DS_Store
+backend/storage/
+backend/.coverage
+backend/*.egg-info/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+.playwright-mcp/

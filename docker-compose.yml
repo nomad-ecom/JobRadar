@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: jobradar
+      POSTGRES_PASSWORD: jobradar
+      POSTGRES_DB: jobradar
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobradar"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    environment:
+      JOBRADAR_ENV: development
+      JOBRADAR_DATABASE_URL: postgresql+psycopg://jobradar:jobradar@db:5432/jobradar
+      JOBRADAR_SECRET: dev-only-change-me-not-for-production-use
+      JOBRADAR_CORS_ORIGINS: http://localhost:3000,http://localhost:3001
+      JOBRADAR_SAMPLE_SOURCE: "true"
+      JOBRADAR_STORAGE_DIR: /data/storage
+      JOBRADAR_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - cv-storage:/data/storage
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  cv-storage:
